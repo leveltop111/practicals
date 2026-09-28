@@ -1,0 +1,644 @@
+P1.Aim: To study and implement the Substitution and Transposition Ciphers 
+Code: Python code for implementing Caesar Cipher 
+#A python program to illustrate Caesar Cipher Technique def encrypt(text,s): 
+result = "" 
+# traverse text 
+for i in range(len(text)): 
+char = text[i] 
+# Encrypt uppercase characters 
+if (char.isupper()): 
+result += chr((ord(char) + s-65) % 26 + 65) 
+# Encrypt lowercase characters 
+else: 
+result += chr((ord(char) + s - 97) % 26 + 97) 
+return result 
+#check the above function 
+text=input(" Enter the text to encrypt ") 
+s = 3 
+print("Text : " + text) 
+str(s) 
+print( "Cipher: " + encrypt(text,s)) 
+Code: Java code for implementing Railfence Cipher 
+public class railfence { 
+ public static void main(String args[]) 
+ { 
+ String input = "ismile"; 
+ String output = ""; 
+ int len = input.length(),flag = 0; 
+ System.out.println("Input String : " + input);  for(int i=0;i<len;i+=2) { 
+  
+ output += input.charAt(i); 
+ } 
+ for(int i=1;i<len;i+=2) { 
+  
+ output += input.charAt(i); 
+ } 
+  
+ System.out.println("Ciphered Text : "+output);  } 
+} 
+
+
+P2. RSA Algorithm
+
+import rsa
+ 
+# generate public and private keys with
+# rsa.newkeys method,this method accepts
+# key length as its parameter
+# key length should be atleast 16
+publicKey, privateKey = rsa.newkeys(512)
+ 
+# this is the string that we will be encrypting
+message = "hello geeks"
+ 
+# rsa.encrypt method is used to encrypt
+# string with public key string should be
+# encode to byte string before encryption
+# with encode method
+encMessage = rsa.encrypt(message.encode(),
+                         publicKey)
+ 
+print("original string: ", message)
+print("Public Key :", publicKey )
+print("Private Key :", privateKey)
+print("encrypted string: ", encMessage)
+ 
+# the encrypted message can be decrypted
+# with ras.decrypt method and private key
+# decrypt method returns encoded byte string,
+# use decode method to convert it to string
+# public key cannot be used for decryption
+decMessage = rsa.decrypt(encMessage, privateKey).decode()
+ 
+print("decrypted string: ", decMessage)
+
+Practical 3
+Message Authentication Code
+
+import hashlib
+import hmac
+#data
+#secret key
+password = b'402xy5#'
+#Generate cryptographic hash using md5
+f = open('/content/lorem', 'rb')
+block = f.read()
+my_hmac = hmac.new(block, password, hashlib.md5)
+print("The first digest: " + str(my_hmac.digest()))
+print("The Canonical Name: " + my_hmac.name)
+print("Block size: " + str (my_hmac.block_size) + "bytes")
+print("Digest size: " + str(my_hmac.digest_size) + "bytes")
+#Create a copy of the hmac object
+my_hmac_cpy = my_hmac.copy()
+
+Practical 4 RSA Sign Digital sign
+pip install pycryptodome
+Next, generate a 1024-bit RSA key-pair:
+from Crypto.PublicKey import RSA
+
+keyPair = RSA.generate(bits=1024)
+print(f"Public key:  (n={hex(keyPair.n)}, e={hex(keyPair.e)})")
+print(f"Private key: (n={hex(keyPair.n)}, d={hex(keyPair.d)})")
+# RSA sign the message
+msg = b'A message for signing'
+from hashlib import sha512
+hash = int.from_bytes(sha512(msg).digest(), byteorder='big')
+signature = pow(hash, keyPair.d, keyPair.n)
+print("Signature:", hex(signature))
+# RSA verify signature
+msg = b'A message for signing'
+hash = int.from_bytes(sha512(msg).digest(), byteorder='big')
+hashFromSignature = pow(signature, keyPair.e, keyPair.n)
+print("Signature valid:", hash == hashFromSignature)
+# RSA verify signature (tampered msg)
+msg = b'A message for signing (tampered)'
+hash = int.from_bytes(sha512(msg).digest(), byteorder='big')
+hashFromSignature = pow(signature, keyPair.e, keyPair.n)
+print("Signature valid (tampered):", hash == hashFromSignature)
+
+practical 5 diffie hellman 
+import java.util.*;  
+// create class DiffieHellmanAlgorithmExample to calculate the key for two persons  
+class DiffieHellmanAlgorithmExample {  
+    // main() method start  
+    public static void main(String[] args)  
+    {  
+        long P, G, x, a, y, b, ka, kb;  
+        // create Scanner class object to take input from user  
+        Scanner sc = new Scanner(System.in);  
+        System.out.println("Both the users should be agreed upon the public keys G and P");  
+        // take inputs for public keys from the user  
+        System.out.println("Enter value for public key G:");  
+        G = sc.nextLong();  
+        System.out.println("Enter value for public key P:");  
+        P = sc.nextLong();  
+        // get input from user for private keys a and b selected by User1 and User2  
+        System.out.println("Enter value for private key a selected by user1:");  
+        a = sc.nextLong();  
+        System.out.println("Enter value for private key b selected by user2:");  
+        b = sc.nextLong();  
+          
+        // call calculatePower() method to generate x and y keys  
+        x = calculatePower(G, a, P);  
+        y = calculatePower(G, b, P);  
+        // call calculatePower() method to generate ka and kb secret keys after the exchange of x and y keys          
+        // calculate secret key for User1  
+        ka = calculatePower(y, a, P);  
+        // calculate secret key for User2   
+        kb = calculatePower(x, b, P);  
+        // print secret keys of user1 and user2  
+        System.out.println("Secret key for User1 is:" + ka);  
+        System.out.println("Secret key for User2 is:" + kb);  
+    }  
+    // create calculatePower() method to find the value of x ^ y mod P  
+    private static long calculatePower(long x, long y, long P)  
+    {  
+        long result = 0;          
+        if (y == 1){  
+            return x;  
+        }  
+        else{  
+            result = ((long)Math.pow(x, y)) % P;  
+            return result;  
+        }  
+    }     
+}  
+
+Malware Analysis and Detection 
+Aim: To do Detect and Analyse Malware (Clean Samples) 
+Theory:  
+Malware, short for "malicious software," refers to a broad category of software programs or code  specifically designed to infiltrate, damage, disrupt, or gain unauthorized access to computer systems,  networks, and digital devices. Malware is created with malicious intent, often to steal sensitive  information, gain control over systems, extort money, or cause harm to users or organizations.  There are various types of malware, each with distinct characteristics and purposes. Some common  types of malware include: 
+1. Viruses: Viruses are malicious programs that attach themselves to legitimate files or programs and  spread by infecting other files. When infected files are executed, the virus replicates and spreads  further, potentially causing damage to data and systems. 
+2. Worms: Worms are standalone programs that replicate and spread across computer networks  without needing to attach themselves to other files. They often exploit security vulnerabilities to  self-propagate and can cause network congestion and data loss. 
+3. Trojans: Trojans are deceptive programs that disguise themselves as legitimate software, tricking  users into installing them. Once installed, Trojans can perform a variety of malicious activities, such  as stealing sensitive information, opening backdoors, or launching attacks. 
+4. Ransomware: Ransomware encrypts a user's files or entire system and demands a ransom  payment in exchange for providing the decryption key. It can lead to data loss and significant  disruption if not properly managed. 
+5. Spyware: Spyware is designed to secretly gather information from a user's device, such as  browsing habits, passwords, and personal data. This information is then sent to a remote attacker or  entity. 
+6. Adware: Adware is software that displays unwanted advertisements, often in the form of pop-ups  or banners, on a user's device. While not as malicious as other types of malware, it can be disruptive  and invasive. 
+7. Keyloggers: Keyloggers record a user's keystrokes, allowing attackers to capture sensitive  information like passwords, credit card numbers, and other confidential data. 
+8. Botnets: Botnets are networks of compromised computers or devices, known as "bots" or  "zombies," controlled by a central attacker. Botnets are often used to launch coordinated attacks,  distribute spam, or carry out other malicious activities. 
+9. Rootkits: Rootkits are designed to hide malicious activities from the user and security software.  They can modify or replace core system files to gain unauthorized access and control over a system.
+Prof. Ismail H. Popatia Page 29 
+INS Journal TYCS 
+10. Backdoors: Backdoors provide unauthorized access to a compromised system. They can be used  by attackers to maintain control over a system, often allowing them to return even after the initial  breach is resolved. 
+Malware can enter systems through various vectors, including malicious email attachments,  compromised websites, infected software downloads, and even through physical devices like  infected USB drives. To protect against malware, it's essential to maintain strong cybersecurity  practices, including using reputable antivirus and anti-malware software, keeping software up-to date, avoiding suspicious links and downloads, and practicing safe browsing habits. 
+Analysis:  
+For analysing the Malware, we need one. A clean sample of the Malware needs to be downloaded  from a trusted website, the downloading and analysis is demonstrated by the following steps  
+1) We select the website www.virusshare.com for downloading the clean sample of Malware  (an account needs to be created for the same). Any other source can be selected to  download the Malware (clean sample and authorised site)  
+2) By clicking the above download icon the Malware gets downloaded in ZIP format. 
+3) For unzip the password is “infected”, there is no need to unzip the file, we create a folder  “Malware” on desktop and save the file in the folder
+Prof. Ismail H. Popatia Page 30 
+INS Journal TYCS 4) In order to analyse the Malware, we select the website www.virustotal.com 
+5) Click on “Choose File” and select the file from the location (ZIP file will do, if asks for  password enter infected) 
+6) We get the following after the upload is complete
+Prof. Ismail H. Popatia Page 31 
+INS Journal TYCS 
+We interpret the following findings  
+a) 64 security vendors out of 69 flagged this file as malicious 
+b) The detection tab shows the threats-type which were flagged by the vendors for e.g  c) The details tab gives the following information  
+i. Basic properties 
+ii. History 
+iii. Compiler products 
+iv. Header 
+v. Sections 
+vi. Imports 
+vii. Exports 
+viii. Overlays 
+d) The Behavior tab gives the following information 
+i. Activity summary 
+ii. MITRE ATT&CK Tactics and Techniques 
+iii. Behavior Similarity Hashes 
+iv. Process and service actions 
+Countermeasures: 
+Countermeasures are strategies, actions, or precautions taken to prevent or mitigate various risks,  threats, or undesirable events. In the context of cyber-security and dealing with potential malware,  viruses, and other online threats, here are some common countermeasures you can take: 
+1. Use Antivirus and Anti-Malware Software: Install reputable antivirus and anti-malware software  on your devices. Keep the software updated to ensure you have the latest protection against known  threats. 
+2. Keep Operating Systems and Software Updated: Regularly update your operating system, web  browsers, plugins, and other software. Updates often include security patches that address  vulnerabilities.
+Prof. Ismail H. Popatia Page 32 
+INS Journal TYCS 
+3. Use Strong and Unique Passwords: Use complex passwords that combine upper and lower case  letters, numbers, and symbols. Avoid using common or easily guessable passwords. Consider using a  password manager to securely store your passwords. 
+4. Enable Two-Factor Authentication (2FA): Whenever possible, enable two-factor authentication for  your online accounts. This adds an extra layer of security by requiring a second form of verification in  addition to your password. 
+5. Be Cautious with Email and Attachments: Be wary of unsolicited emails, especially those with  attachments or links. Don't open attachments or click on links from unknown or suspicious sources.  Verify the sender's authenticity before taking any action. 
+6. Use a Firewall: Enable firewalls on your devices and network. Firewalls help block unauthorized  access and protect your system from external threats. 
+7. Regular Backups: Regularly back up your important data to an external source or a cloud storage  service. In case of a malware attack or data loss, you'll have a copy of your important files. 
+9. Secure Wi-Fi Networks: Secure your home or office Wi-Fi network with a strong password and  encryption. Avoid using public Wi-Fi networks for sensitive activities. 
+10. Use Ad-Blockers and Script Blockers: Install browser extensions that block ads and potentially  malicious scripts. This can help prevent drive-by downloads and malvertising. 
+11. Disable Macros: Disable macros in office documents unless you're certain they are safe.  Malicious macros are often used to deliver malware. 
+12. Download Software from Official Sources: Only download software from reputable and official  sources. Be cautious of downloading software from unfamiliar websites. 
+13. Regularly Scan for Malware: Perform regular scans of your devices using reputable antivirus and  anti-malware tools. 
+14. Use Virtual Private Networks (VPNs): When connecting to the internet, especially on public  networks, use a VPN to encrypt your internet connection and enhance your privacy. 
+15. Implement Security Policies: If you're managing a network or a business, establish and enforce  security policies for employees, including guidelines for safe browsing, email practices, and device  usage. 
+
+
+AI
+
+1.BFS and DFS
+
+BFS
+graph = {
+  'A' : ['B','C'],
+  'B' : ['D', 'E'],
+  'C' : ['F'],
+  'D' : [],
+  'E' : ['F'],
+  'F' : []
+}
+
+visited = [] # List to keep track of visited nodes
+queue = []     #Initialize a queue
+
+def bfs(visited, graph, node):
+  visited.append(node)
+  queue.append(node)
+
+  while queue:
+    s = queue.pop(0)
+    print (s, end = " ")
+
+    for neighbour in graph[s]:
+      if neighbour not in visited:
+        visited.append(neighbour)
+        queue.append(neighbour)
+
+# Driver Code
+bfs(visited, graph, 'A')
+
+
+Practical 1B DFS:
+# Using a Python dictionary to act as an adjacency list
+graph = {
+    'A' : ['B','C'],
+    'B' : ['D', 'E'],
+    'C' : ['F'],
+    'D' : [],
+    'E' : ['F'],
+    'F' : []
+}
+
+visited = set() # Set to keep track of visited nodes.
+
+def dfs(visited, graph, node):
+    if node not in visited:
+        print (node)
+        visited.add(node)
+        for neighbour in graph[node]:
+            dfs(visited, graph, neighbour)
+
+# Driver Code
+dfs(visited, graph, 'A')
+
+
+2.A*
+import heapq
+
+# Graph represented as an adjacency list
+graph = {
+    'A': [('B', 1), ('C', 3)],
+    'B': [('D', 3), ('E', 1)],
+    'C': [('F', 5)],
+    'D': [('G', 2)],
+    'E': [('G', 4)],
+    'F': [('G', 1)],
+    'G': []
+}
+
+# Heuristic values (estimated distance to goal G)
+heuristic = {
+    'A': 6,
+    'B': 4,
+    'C': 4,
+    'D': 2,
+    'E': 2,
+    'F': 1,
+    'G': 0
+}
+
+def a_star(start, goal):
+    # Priority queue
+    open_list = []
+    heapq.heappush(open_list, (0, start))
+
+    # Cost from start
+    g_cost = {start: 0}
+
+    # Store parent of each node
+    parent = {start: None}
+
+    while open_list:
+        current = heapq.heappop(open_list)[1]
+
+        if current == goal:
+            path = []
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            return path[::-1]
+
+        for neighbor, cost in graph[current]:
+            new_cost = g_cost[current] + cost
+
+            if neighbor not in g_cost or new_cost < g_cost[neighbor]:
+                g_cost[neighbor] = new_cost
+                f_cost = new_cost + heuristic[neighbor]
+                heapq.heappush(open_list, (f_cost, neighbor))
+                parent[neighbor] = current
+
+    return None
+
+# Driver Code
+path = a_star('A', 'G')
+
+print("Shortest Path:", path)
+
+3. Decision Tree.   
+Make a 5*5 any data  csv file 
+
+
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import time # Added for measuring efficiency 
+from sklearn import tree 
+from sklearn.model_selection import train_test_split # Added for splitting data from sklearn.metrics import accuracy_score # Added for accuracy calculation from sklearn.preprocessing import LabelEncoder 
+# 1. Load the data 
+PlayTennis = pd.read_csv("D:\\AI\\Tennis.csv") 
+print("Original Dataset:") 
+print(PlayTennis) 
+# 2. Encode categorical variables to numbers 
+Le = LabelEncoder() 
+PlayTennis['outlook'] = Le.fit_transform(PlayTennis['outlook']) 
+PlayTennis['temp'] = Le.fit_transform(PlayTennis['temp']) 
+PlayTennis['humidity'] = Le.fit_transform(PlayTennis['humidity']) 
+PlayTennis['wind'] = Le.fit_transform(PlayTennis['wind']) 
+PlayTennis['play'] = Le.fit_transform(PlayTennis['play']) 
+print("\nEncoded Dataset:") 
+print(PlayTennis) 
+# 3. Separate features (X) and target (y) 
+y = PlayTennis['play'] 
+X = PlayTennis.drop(['play'], axis=1) 
+# 4. Split data into Train and Test sets (80% Train, 20% Test) 
+# random_state=42 ensures you get the exact same split every time you run it X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# 5. Create the tree maker 
+clf = tree.DecisionTreeClassifier(criterion='entropy') 
+# 6. Train the model and measure training efficiency (speed) 
+start_train_time = time.perf_counter() 
+clf = clf.fit(X_train, y_train) # Train only on X_train and y_train end_train_time = time.perf_counter() 
+train_duration = end_train_time - start_train_time 
+# 7. Predict on test data and measure prediction efficiency 
+start_predict_time = time.perf_counter() 
+y_pred = clf.predict(X_test) # Generate predictions for the unseen test data end_predict_time = time.perf_counter() 
+predict_duration = end_predict_time - start_predict_time 
+# 8. Calculate accuracy 
+accuracy = accuracy_score(y_test, y_pred) 
+# --- PRINT EVALUATION METRICS --- 
+print("\n" + "="*40) 
+print(" EVALUATION METRICS ") 
+print("="*40) 
+print(f"Accuracy on Test Data : {accuracy * 100:.2f}%") 
+print(f"Training Efficiency : {train_duration:.6f} seconds") 
+print(f"Inference Efficiency : {predict_duration:.6f} seconds") 
+print("="*40 + "\n") 
+# 9. Plot the tree using the trained model 
+plt.figure(figsize=(12, 8)) 
+tree.plot_tree( 
+ clf, 
+ feature_names=X.columns, # Shows 'outlook', 'temp', etc. instead of X[0], X[1]  class_names=['No', 'Yes'], # Shows clear target classes 
+ filled=True, # Colors nodes by their dominant class  rounded=True, # Smooths node box corners 
+ fontsize=10 
+) 
+# Render the plot cleanly 
+plt.show()
+
+4. XOR using Artificial Neural Network
+
+
+import numpy as np
+from sklearn.neural_network import MLPClassifier
+
+# 1. XOR Dataset
+X_train = np.array([[0, 0],
+                    [0, 1],
+                    [1, 0],
+                    [1, 1]])
+
+y_train = np.array([0, 1, 1, 0])
+
+# 2. Define Neural Network with updated solver
+model = MLPClassifier(
+    hidden_layer_sizes=(8,),  # Increased to 8 neurons to learn faster
+    activation='logistic',
+    solver='lbfgs',           # Powerful solver specifically for small datasets
+    max_iter=5000,
+    random_state=42           # Fixed seed so it works reliably every run
+)
+
+# 3. Train
+model.fit(X_train, y_train)
+
+# 4. Predict
+predictions = model.predict(X_train)
+
+# 5. Output Results
+print("Input A | Input B  ==>  Expected Output  |  Network Prediction")
+print("-" * 60)
+
+for (input_a, input_b), true_output, pred in zip(X_train, y_train, predictions):
+    status = "Correct!" if true_output == pred else "Wrong"
+    print(f"   {input_a}    |    {input_b}    ==>        {true_output}        |         {pred}       ({status})")
+
+5.SVM
+
+pip install scikit-learn
+or
+conda install scikit-learn
+________________________________________
+Step 2: Python Code
+# Practical: Support Vector Machine (SVM)
+
+# Step 1: Import libraries
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Step 2: Load Iris Dataset
+iris = datasets.load_iris()
+
+# Step 3: Select only two classes (0 and 1) for Binary Classification
+X = iris.data[:100]
+y = iris.target[:100]
+
+# Step 4: Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1)
+
+# Step 5: Create SVM Model
+model = SVC(kernel='linear', C=1)
+
+# Step 6: Train the model
+model.fit(X_train, y_train)
+
+# Step 7: Predict Test Data
+y_pred = model.predict(X_test)
+
+# Step 8: Print Results
+print("Actual Values:")
+print(y_test)
+
+print("\nPredicted Values:")
+print(y_pred)
+
+print("\nAccuracy:")
+print(accuracy_score(y_test, y_pred))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+6. AdaBoost Ensemble Learning
+pip install scikit-learn
+or
+conda install scikit-learn
+________________________________________
+Step 2: Python Code
+# Practical: AdaBoost Ensemble Learning
+
+# Step 1: Import libraries
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import accuracy_score
+
+# Step 2: Load dataset
+data = load_breast_cancer()
+
+X = data.data
+y = data.target
+
+# Step 3: Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1)
+
+# Step 4: Create a Weak Classifier
+weak_model = DecisionTreeClassifier(max_depth=1)
+
+# Step 5: Train Weak Classifier
+weak_model.fit(X_train, y_train)
+
+# Step 6: Predict using Weak Classifier
+weak_pred = weak_model.predict(X_test)
+
+# Step 7: Accuracy of Weak Classifier
+weak_accuracy = accuracy_score(y_test, weak_pred)
+
+print("Weak Classifier Accuracy =", weak_accuracy)
+
+# Step 8: Create AdaBoost Model
+ada_model = AdaBoostClassifier(
+    estimator=DecisionTreeClassifier(max_depth=1),
+    n_estimators=50,
+    random_state=1
+)
+
+# Step 9: Train AdaBoost Model
+ada_model.fit(X_train, y_train)
+
+# Step 10: Predict using AdaBoost
+ada_pred = ada_model.predict(X_test)
+
+# Step 11: Accuracy of AdaBoost
+ada_accuracy = accuracy_score(y_test, ada_pred)
+
+print("AdaBoost Accuracy =", ada_accuracy)
+
+7.Naive Bayes Classifier
+Open Anaconda Prompt and type:
+pip install scikit-learn
+or
+conda install scikit-learn
+________________________________________
+Step 2: Python Code
+# Practical: Naive Bayes Classifier
+
+# Step 1: Import libraries
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+
+# Step 2: Load Iris dataset
+iris = load_iris()
+
+X = iris.data
+y = iris.target
+
+# Step 3: Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1)
+
+# Step 4: Create Naive Bayes model
+model = GaussianNB()
+
+# Step 5: Train the model
+model.fit(X_train, y_train)
+
+# Step 6: Predict test data
+y_pred = model.predict(X_test)
+
+# Step 7: Display Actual and Predicted Values
+print("Actual Values:")
+print(y_test)
+
+print("\nPredicted Values:")
+print(y_pred)
+
+# Step 8: Calculate Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy =", accuracy)
+
+# Step 9: Calculate Class Probabilities
+probabilities = model.predict_proba(X_test)
+
+print("\nClass Probabilities (First 5 Records):")
+print(probabilities[:5])
+8.KNN
+pip install scikit-learn
+or
+conda install scikit-learn
+________________________________________
+Step 2: Python Code
+# Practical: K-Nearest Neighbors (K-NN)
+
+# Step 1: Import libraries
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Step 2: Load Iris dataset
+iris = load_iris()
+
+X = iris.data
+y = iris.target
+
+# Step 3: Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1)
+
+# Step 4: Create K-NN model
+model = KNeighborsClassifier(n_neighbors=3)
+
+# Step 5: Train the model
+model.fit(X_train, y_train)
+
+# Step 6: Predict test data
+y_pred = model.predict(X_test)
+
+# Step 7: Display Actual and Predicted Values
+print("Actual Values:")
+print(y_test)
+
+print("\nPredicted Values:")
+print(y_pred)
+
+# Step 8: Calculate Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy =", accuracy)
+
