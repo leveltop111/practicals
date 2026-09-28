@@ -1,0 +1,2157 @@
+P2.AIM:To develop and execute a Selenium IDE test suite for two different websites
+by
+performing functional operations such as clicking links, filling forms, selecting
+dropdown options, and verifying displayed content. Also, to analyze test results
+and generate execution logs.
+Cmd target value
+Open https://www.selenium.dev/selenium/web/web-form.html
+Type name=my-text STQA
+Type name=my-password
+TEST
+Select name=my-select 12345
+Click css=button lable=two
+Assert text css=body Received
+Cmd Target value
+Open https://www.wikipedia.org
+Click id=js-link-box-en
+Assert Wikipedia, the free encyclopedia
+Title name=search Selenium (software)
+type css=button [type='submit']
+click
+assert text css=firstHeading Selenium(software)
+P4.AIM: Selenium Server (Grid) Configuration and Remote Execution
+Tool: Selenium Server (Grid)
+Install and configure Selenium Server in Hub-Node architecture. Execute a test
+script
+on multiple browsers using Remote WebDriver and compare cross-browser results.
+INTEL
+package org.example;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import java.net.URL;
+public class ChromeGridTest {
+ public static void main(String[] args) {
+ try {
+ ChromeOptions options = new ChromeOptions();
+ WebDriver driver = new RemoteWebDriver(
+ new URL("http://localhost:4444"),
+ options);
+ driver.get("https://www.google.com");
+ System.out.println("Page Title : " + driver.getTitle());
+ System.out.println("Current URL : " + driver.getCurrentUrl());
+Thread.sleep(3000);
+ driver.quit();
+ System.out.println("Test Executed Successfully.");
+ } catch (Exception e) {
+ e.printStackTrace();
+ }
+ }
+}
+POM
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="https://maven.apache.org/POM/4.0.0
+https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>SeleniumGridDemo</artifactId>
+ <version>1.0-SNAPSHOT</version>
+ <properties>
+ <maven.compiler.source>26</maven.compiler.source>
+ <maven.compiler.target>26</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.45.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical 5
+Login Automation and Validation
+Tool: Selenium WebDriver (Java/PHP)
+Write an automation script to perform login on a specified web page. Verify
+successful login using assertions such as URL validation, welcome message
+validation, and logout visibility check.
+Intel
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+public class LoginTest {
+ public static void main(String[] args) throws InterruptedException {
+ // Setup ChromeDriver automatically
+ WebDriverManager.chromedriver().setup();
+ // Open Chrome
+ WebDriver driver = new ChromeDriver();
+ // Maximize window
+ driver.manage().window().maximize();
+ // Open website
+ driver.get("https://the-internet.herokuapp.com/login");
+ // Enter username
+ driver.findElement(By.id("username")).sendKeys("tomsmith");
+ // Enter password
+ driver.findElement(By.id("password")).sendKeys("SuperSecretPassword!");
+ // Click Login
+ driver.findElement(By.cssSelector("button[type='submit']")).click();
+ // Wait for 2 seconds
+ Thread.sleep(2000);
+ // Verify Login
+ String message = driver.findElement(By.id("flash")).getText();
+ if(message.contains("You logged into a secure area!"))
+ {
+ System.out.println("Login Successful");
+ }
+ else
+ {
+ System.out.println("Login Failed");
+ }
+ // Close browser
+ driver.quit();
+ }
+}
+Pom
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.demo</groupId>
+ <artifactId>SeleniumLoginDemo</artifactId>
+ <version>1.0</version>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.22.0</version>
+ </dependency>
+ <!-- WebDriver Manager -->
+ <dependency>
+ <groupId>io.github.bonigarcia</groupId>
+ <artifactId>webdrivermanager</artifactId>
+ <version>6.1.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical6
+Web Element Interaction and Synchronization Handling
+Tool: Selenium WebDriver (Java)
+Develop a script to automate interaction with various web elements (textbox, radio
+button, checkbox, dropdown, alert, and frames). Implement implicit and explicit waits
+for synchronization handling.
+WebElementDemo.java
+For textbox, radio button, checkbox, dropdown
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+public class WebElementDemo {
+ public static void main(String[] args) {
+ WebDriverManager.chromedriver().setup();
+ WebDriver driver = new ChromeDriver();
+ // Implicit Wait
+ driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ driver.manage().window().maximize();
+ // Open Demo Website
+ driver.get("https://demoqa.com/automation-practice-form");
+ WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+ // Textbox
+
+ driver.findElement(By.id("firstName")).sendKeys("Ashwini");
+ driver.findElement(By.id("lastName")).sendKeys("Patil");
+ driver.findElement(By.id("userEmail")).sendKeys("ashwini@gmail.com");
+
+ // Radio Button
+
+ WebElement female =
+ driver.findElement(By.xpath("//label[text()='Female']"));
+ wait.until(ExpectedConditions.elementToBeClickable(female));
+ female.click();
+
+ // Mobile Number
+
+ driver.findElement(By.id("userNumber"))
+ .sendKeys("9876543210");
+ // Checkbox
+
+ WebElement sports =
+ driver.findElement(By.xpath("//label[text()='Sports']"));
+ wait.until(ExpectedConditions.elementToBeClickable(sports));
+ sports.click();
+
+ // Dropdown
+
+ WebElement state =
+ driver.findElement(By.id("react-select-3-input"));
+ state.sendKeys("NCR");
+ state.sendKeys(Keys.ENTER);
+
+ // Explicit Wait Example
+
+ wait.until(ExpectedConditions.visibilityOfElementLocated(
+ By.id("submit")));
+ driver.findElement(By.id("submit")).click();
+ System.out.println("Form Submitted Successfully");
+ driver.quit();
+ }
+}
+ForAlert.java
+For alert and frames
+package org.example;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.time.Duration;
+public class ForAlert {
+ public static void main(String[] args) throws InterruptedException {
+ WebDriverManager.chromedriver().setup();
+ WebDriver driver = new ChromeDriver();
+ driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ driver.manage().window().maximize();
+ // -----------------------------
+ // Alert Example
+ // -----------------------------
+ driver.get("https://demoqa.com/alerts");
+ driver.findElement(By.id("alertButton")).click();
+ Alert alert = driver.switchTo().alert();
+ System.out.println(alert.getText());
+ alert.accept();
+ // -----------------------------
+ // Frame Example
+ // -----------------------------
+ driver.get("https://demoqa.com/frames");
+ driver.switchTo().frame("frame1");
+ System.out.println(driver.findElement(By.id("sampleHeading")).getText());
+ driver.switchTo().defaultContent();
+ driver.quit();
+ }
+}
+POM.XML
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.demo</groupId>
+ <artifactId>WebElementInteraction</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- WebDriver Manager -->
+ <dependency>
+ <groupId>io.github.bonigarcia</groupId>
+ <artifactId>webdrivermanager</artifactId>
+ <version>6.1.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical 7
+Data-Driven Testing Using Excel Integration
+Tool: Selenium WebDriver + Apache POI Write a program to update 10 student records
+in an Excel file and validate changes on the web application. Perform data reading,
+writing, and verification using Apache POI library.
+Project Structure:
+DataDrivenTesting
+│
+├── pom.xml
+├── students.xlsx
+├── student.html
+│
+└── src
+ └── main
+ └── java
+ └── StudentDataDriven.java
+StudentDataDriven.java
+package org.example;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.*;
+public class StudentDataDriven {
+ public static void main(String[] args) throws Exception {
+ Workbook wb = new XSSFWorkbook(new FileInputStream("students.xlsx"));
+ Sheet sheet = wb.getSheetAt(0);
+ WebDriverManager.chromedriver().setup();
+ WebDriver driver = new ChromeDriver();
+ String path = new File("student.html").getAbsolutePath();
+ driver.get("file:///" + path.replace("\\", "/"));
+ for (int i = 1; i <= 5; i++) {
+ Row row = sheet.getRow(i);
+ driver.findElement(By.id("roll")).clear();
+ driver.findElement(By.id("name")).clear();
+ driver.findElement(By.id("email")).clear();
+ driver.findElement(By.id("roll")).sendKeys(row.getCell(0).toString());
+ driver.findElement(By.id("name")).sendKeys(row.getCell(1).toString());
+ driver.findElement(By.id("email")).sendKeys(row.getCell(2).toString());
+ driver.findElement(By.id("submit")).click();
+ String msg = driver.findElement(By.id("msg")).getText();
+ row.createCell(3).setCellValue(msg.equals("Record Updated") ? "PASS" : "FAIL");
+ }
+ FileOutputStream out = new FileOutputStream("students.xlsx");
+ wb.write(out);
+ out.close();
+ wb.close();
+ driver.quit();
+ System.out.println("Data Updated Successfully.");
+ }
+}
+C:\Users\student\IdeaProjects\Practical7\Student.html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Form</title>
+</head>
+<body>
+Roll No: <input type="text" id="roll"><br><br>
+Name: <input type="text" id="name"><br><br>
+Email: <input type="text" id="email"><br><br>
+<button id="submit" onclick="save()">Submit</button>
+<p id="msg"></p>
+<script>
+function save(){
+document.getElementById("msg").innerHTML="Record Updated";
+}
+</script>
+</body>
+</html>
+C:\Users\student\IdeaProjects\Practical7\Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.tybsc</groupId>
+ <artifactId>DataDrivenTesting</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.release>17</maven.compiler.release>
+ <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ </properties>
+ <dependencies>
+ <!-- Selenium WebDriver -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- Apache POI -->
+ <dependency>
+ <groupId>org.apache.poi</groupId>
+ <artifactId>poi-ooxml</artifactId>
+ <version>5.4.1</version>
+ </dependency>
+ <!-- WebDriverManager -->
+ <dependency>
+ <groupId>io.github.bonigarcia</groupId>
+ <artifactId>webdrivermanager</artifactId>
+ <version>6.1.0</version>
+ </dependency>
+ </dependencies>
+ <build>
+ <plugins>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-compiler-plugin</artifactId>
+ <version>3.14.0</version>
+ <configuration>
+ <release>17</release>
+ </configuration>
+ </plugin>
+ </plugins>
+ </build>
+</project>
+Create excel file with following data and save the file using below path
+C:\Users\student\IdeaProjects\Practical7\Students.xlsx
+Roll No Name Email Status
+101 Amit amit@gmail.com
+102 Neha neha@gmail.com
+103 Rahul rahul@gmail.com
+104 Sneha sneha@gmail.com
+105 Priya priya@gmail.com
+Practical 8
+Data Extraction and Score Analysis from Web Table
+Tool: Selenium WebDriver
+Automate extraction of student marks from a dynamic web table and determine the
+number of students scoring above 60 in at least one subject. Compute total count
+and
+percentage.
+WebTableAnalysis.java
+package org.example;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.File;
+import java.util.List;
+public class WebTableAnalysis {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("file:///C:/Users/student/IdeaProjects/untitled/studentMarks.html");
+ List<WebElement> rows =
+ driver.findElements(By.xpath("//table[@id='marks']//tr"));
+ int count = 0;
+ for (int i = 1; i < rows.size(); i++) {
+ List<WebElement> cells =
+ rows.get(i).findElements(By.tagName("td"));
+ int math = Integer.parseInt(cells.get(1).getText());
+ int science = Integer.parseInt(cells.get(2).getText());
+ int english = Integer.parseInt(cells.get(3).getText());
+ if (math > 60 || science > 60 || english > 60) {
+ count++;
+ }
+ }
+ int total = rows.size() - 1;
+ double percentage = (count * 100.0) / total;
+ System.out.println("Total Students : " + total);
+ System.out.println("Above 60 in at least one subject : " + count);
+ System.out.printf("Percentage : %.2f%%", percentage);
+ System.out.println("Rows found = " + rows.size());
+ //driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>WebTableAnalysis</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.24.0</version>
+ </dependency>
+ </dependencies>
+</project>
+studentMarks.html
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Student Marks</title>
+</head>
+<body>
+<h2>Student Marks Table</h2>
+<table border="1" id="marks">
+ <tr>
+ <th>Name</th>
+ <th>Math</th>
+ <th>Science</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td>Amit</td>
+ <td>75</td>
+ <td>55</td>
+ <td>68</td>
+ </tr>
+ <tr>
+ <td>Neha</td>
+ <td>45</td>
+ <td>52</td>
+ <td>58</td>
+ </tr>
+ <tr>
+ <td>Riya</td>
+ <td>80</td>
+ <td>90</td>
+ <td>85</td>
+ </tr>
+ <tr>
+ <td>Karan</td>
+ <td>60</td>
+ <td>62</td>
+ <td>50</td>
+ </tr>
+ <tr>
+ <td>Priya</td>
+ <td>40</td>
+ <td>48</td>
+ <td>35</td>
+ </tr>
+</table>
+</body>
+</html>
+Practical 9
+Object Identification and Counting on Web Page
+Tool: Selenium WebDriver
+Write a program to identify and count the total number of objects present on a web
+page including links, images, buttons, and input elements. Display categorized
+Counts.
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>ObjectCounter</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+ObjectCounter.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.List;
+public class ObjectCounter {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://www.geeksforgeeks.org/java/java/");
+ driver.manage().window().maximize();
+ // Count Links
+ List<WebElement> links = driver.findElements(By.tagName("a"));
+ // Count Images
+ List<WebElement> images = driver.findElements(By.tagName("img"));
+ // Count Buttons
+ List<WebElement> buttons = driver.findElements(By.tagName("button"));
+ // Count Input Fields
+ List<WebElement> inputs = driver.findElements(By.tagName("input"));
+ // Display Counts
+ System.out.println("===== Object Count =====");
+ System.out.println("Links : " + links.size());
+ System.out.println("Images : " + images.size());
+ System.out.println("Buttons : " + buttons.size());
+ System.out.println("Input Tags : " + inputs.size());
+ int total = links.size() + images.size() + buttons.size() + inputs.size();
+ System.out.println("------------------------");
+ System.out.println("Total Objects : " + total);
+ //driver.quit();
+ }
+}
+Practical 10
+List and Combo Box Item Verification
+Tool: Selenium WebDriver
+Automate the process of identifying a list or dropdown box on a web page and
+determine the total number of items. Validate default selected value and perform
+selection testing.
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>DropdownVerification</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+DropdownVerification.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import java.util.List;
+public class DropdownVerification {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://the-internet.herokuapp.com/dropdown");
+ driver.manage().window().maximize();
+ // Locate dropdown
+ WebElement dropdown = driver.findElement(By.id("dropdown"));
+ // Create Select object
+ Select select = new Select(dropdown);
+ // Get all items
+ List<WebElement> items = select.getOptions();
+ System.out.println("Total Items : " + items.size());
+ // Display all items
+ System.out.println("\nDropdown Items:");
+ for (WebElement item : items) {
+ System.out.println(item.getText());
+ }
+ // Default selected value
+ System.out.println("\nDefault Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // Select by visible text
+ select.selectByVisibleText("Option 1");
+ System.out.println("Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // Select another option
+ select.selectByVisibleText("Option 2");
+ System.out.println("New Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // driver.quit();
+ }
+}
+Practical 9
+Object Identification and Counting on Web Page
+Tool: Selenium WebDriver
+Write a program to identify and count the total number of objects present on a web
+page including links, images, buttons, and input elements. Display categorized
+Counts.
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>ObjectCounter</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+ObjectCounter.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.List;
+public class ObjectCounter {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://www.geeksforgeeks.org/java/java/");
+ driver.manage().window().maximize();
+ // Count Links
+ List<WebElement> links = driver.findElements(By.tagName("a"));
+ // Count Images
+ List<WebElement> images = driver.findElements(By.tagName("img"));
+ // Count Buttons
+ List<WebElement> buttons = driver.findElements(By.tagName("button"));
+ // Count Input Fields
+ List<WebElement> inputs = driver.findElements(By.tagName("input"));
+ // Display Counts
+ System.out.println("===== Object Count =====");
+ System.out.println("Links : " + links.size());
+ System.out.println("Images : " + images.size());
+ System.out.println("Buttons : " + buttons.size());
+ System.out.println("Input Tags : " + inputs.size());
+ int total = links.size() + images.size() + buttons.size() + inputs.size();
+ System.out.println("------------------------");
+ System.out.println("Total Objects : " + total);
+ //driver.quit();
+ }
+}
+Practical 10
+List and Combo Box Item Verification
+Tool: Selenium WebDriver
+Automate the process of identifying a list or dropdown box on a web page and
+determine the total number of items. Validate default selected value and perform
+selection testing.
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>DropdownVerification</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+DropdownVerification.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import java.util.List;
+public class DropdownVerification {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://the-internet.herokuapp.com/dropdown");
+ driver.manage().window().maximize();
+ // Locate dropdown
+ WebElement dropdown = driver.findElement(By.id("dropdown"));
+ // Create Select object
+ Select select = new Select(dropdown);
+ // Get all items
+ List<WebElement> items = select.getOptions();
+ System.out.println("Total Items : " + items.size());
+ // Display all items
+ System.out.println("\nDropdown Items:");
+ for (WebElement item : items) {
+ System.out.println(item.getText());
+ }
+ // Default selected value
+ System.out.println("\nDefault Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // Select by visible text
+ select.selectByVisibleText("Option 1");
+ System.out.println("Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // Select another option
+ select.selectByVisibleText("Option 2");
+ System.out.println("New Selected Item : "
+ + select.getFirstSelectedOption().getText());
+ // driver.quit();
+ }
+}
+Practical11
+Checkbox Identification and Validation
+Tool: Selenium WebDriver
+Write a program to count the total number of checkboxes on a web page, including
+checked and unchecked counts. Perform dynamic selection and validation.
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.List;
+public class CheckboxValidation {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://the-internet.herokuapp.com/checkboxes");
+ driver.manage().window().maximize();
+ // Find all checkboxes
+ List<WebElement> checkboxes =
+ driver.findElements(By.cssSelector("input[type='checkbox']"));
+ int checked = 0;
+ int unchecked = 0;
+ // Count checked and unchecked checkboxes
+ for (WebElement checkbox : checkboxes) {
+ if (checkbox.isSelected())
+ checked++;
+ else
+ unchecked++;
+ }
+ System.out.println("Total Checkboxes : " + checkboxes.size());
+ System.out.println("Checked : " + checked);
+ System.out.println("Unchecked : " + unchecked);
+ // Dynamic Selection
+ System.out.println("\nSelecting all unchecked checkboxes...");
+ for (WebElement checkbox : checkboxes) {
+ if (!checkbox.isSelected()) {
+ checkbox.click();
+ }
+ }
+ // Validation
+ boolean allSelected = true;
+ for (WebElement checkbox : checkboxes) {
+ if (!checkbox.isSelected()) {
+ allSelected = false;
+ break;
+ }
+ }
+ if (allSelected)
+ System.out.println("Validation Passed: All checkboxes are selected.");
+ else
+ System.out.println("Validation Failed.");
+ driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>CheckboxValidation</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical 12
+Dynamic Web Table Handling and Sorting Validation
+Tool: Selenium WebDriver
+Automate extraction of data from a dynamic web table. Validate sorting
+functionality
+and verify correctness of filtered results.
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+public class WebTableHandling {
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://the-internet.herokuapp.com/tables");
+ driver.manage().window().maximize();
+ // Extract data from Last Name column
+ List<WebElement> rows = driver.findElements(
+ By.xpath("//table[@id='table1']/tbody/tr/td[1]"));
+ System.out.println("Last Names in Table:");
+ List<String> names = new ArrayList<>();
+ for (WebElement row : rows) {
+ System.out.println(row.getText());
+ names.add(row.getText());
+ }
+ // Click Last Name header for sorting
+ driver.findElement(
+ By.xpath("//table[@id='table1']//span[text()='Last Name']"))
+ .click();
+ // Read sorted data
+ List<WebElement> sortedRows = driver.findElements(
+ By.xpath("//table[@id='table1']/tbody/tr/td[1]"));
+ List<String> actual = new ArrayList<>();
+ for (WebElement row : sortedRows) {
+ actual.add(row.getText());
+ }
+ // Expected sorted list
+ List<String> expected = new ArrayList<>(actual);
+ Collections.sort(expected);
+ if (actual.equals(expected))
+ System.out.println("\nSorting Validation : Passed");
+ else
+ System.out.println("\nSorting Validation : Failed");
+ // Filter Validation
+ System.out.println("\nNames containing 'B':");
+ for (String name : actual) {
+ if (name.startsWith("B")) {
+ System.out.println(name);
+ }
+ }
+ driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>WebTableHandling</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical 13
+File Upload and Download Automation
+Tool: Selenium WebDriver + Robot Class
+Develop a script to automate file upload and download functionality. Validate
+successful upload and verify file existence after download.
+Create one pdf file and store it in one folder
+For example location used in below upload file as- “D:\\STQA\\Sample.pdf"
+FileUploadRobot.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.time.Duration;
+public class FileUploadRobot {
+ public static void main(String[] args) throws Exception {
+ WebDriver driver = new ChromeDriver();
+ driver.manage().window().maximize();
+ driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ driver.get("https://www.ilovepdf.com/pdf_to_word");
+ Thread.sleep(3000);
+ WebElement button = driver.findElement(By.id("pickfiles"));
+ button.click();
+ Thread.sleep(3000);
+ StringSelection file =
+ new StringSelection("D:\\STQA\\Sample.pdf");
+ Toolkit.getDefaultToolkit()
+ .getSystemClipboard()
+ .setContents(file, null);
+ Robot robot = new Robot();
+ robot.delay(1000);
+ robot.keyPress(KeyEvent.VK_CONTROL);
+ robot.keyPress(KeyEvent.VK_V);
+ robot.keyRelease(KeyEvent.VK_V);
+ robot.keyRelease(KeyEvent.VK_CONTROL);
+ robot.delay(1000);
+ robot.keyPress(KeyEvent.VK_ENTER);
+ robot.keyRelease(KeyEvent.VK_ENTER);
+ System.out.println("File selected successfully.");
+ Thread.sleep(8000);
+ driver.quit();
+ }
+}
+FileDownload.java
+package org.example;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.File;
+import java.time.Duration;
+public class FileDownload {
+ public static void main(String[] args) throws Exception {
+ WebDriver driver = new ChromeDriver();
+ driver.manage().window().maximize();
+ driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ // Open download page
+ driver.get("https://the-internet.herokuapp.com/download");
+ // Click the first available file
+ driver.findElement(By.cssSelector("div.example a")).click();
+ System.out.println("Downloading file...");
+ // Wait for the download to complete
+ Thread.sleep(5000);
+ // Get the downloaded file name
+ String fileName = driver.findElement(By.cssSelector("div.example a")).getText();
+ // Location of Downloads folder
+ String downloadPath = System.getProperty("user.home")
+ + "\\Downloads\\" + fileName;
+ File file = new File(downloadPath);
+ if (file.exists()) {
+ System.out.println("Download Successful");
+ System.out.println("File Name : " + fileName);
+ System.out.println("Location : " + file.getAbsolutePath());
+ } else {
+ System.out.println("Download Failed");
+ }
+ driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.demo</groupId>
+ <artifactId>FileAutomation</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Practical 14
+Screenshot Capture and Logging Mechanism
+Tool: Selenium WebDriver + Log4j
+Implement screenshot capture on test failure and integrate logging mechanism
+using
+Log4j. Generate execution logs and analyze error messages.
+ScreenshotLogDemo
+package org.example;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.File;
+import java.time.Duration;
+public class ScreenshotLogDemo {
+ static Logger log =
+ LogManager.getLogger(ScreenshotLogDemo.class);
+ public static void main(String[] args) {
+ WebDriver driver = new ChromeDriver();
+ driver.manage().window().maximize();
+ driver.manage().timeouts()
+ .implicitlyWait(Duration.ofSeconds(10));
+ try {
+ log.info("Browser Started");
+ driver.get("https://www.google.com");
+ log.info("Google Opened");
+ // Intentionally incorrect locator to generate an error
+ driver.findElement(By.id("wrong_id"));
+ log.info("Element Found");
+ }
+ catch(Exception e){
+ log.error("Test Failed");
+ log.error(e.getMessage());
+ takeScreenshot(driver);
+ }
+ finally {
+ driver.quit();
+ log.info("Browser Closed");
+ }
+ }
+ public static void takeScreenshot(WebDriver driver){
+ try{
+ TakesScreenshot ts =
+ (TakesScreenshot) driver;
+ File source =
+ ts.getScreenshotAs(OutputType.FILE);
+//CREATE THE FOLDER IN SYSTEM OR GIVE THE PATH TO WHICH SCREENSHOT TO BE
+SAVED
+ File destination =
+ new File("D:\\STQA\\screenshots\\");
+ FileUtils.copyFile(source,destination);
+ log.info("Screenshot Saved");
+ }
+ catch(Exception ex){
+ log.error(ex.getMessage());
+ }
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.demo</groupId>
+ <artifactId>ScreenshotLogging</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>26</maven.compiler.source>
+ <maven.compiler.target>26</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- Log4j2 -->
+ <dependency>
+ <groupId>org.apache.logging.log4j</groupId>
+ <artifactId>log4j-api</artifactId>
+ <version>2.25.1</version>
+ </dependency>
+ <dependency>
+ <groupId>org.apache.logging.log4j</groupId>
+ <artifactId>log4j-core</artifactId>
+ <version>2.25.1</version>
+ </dependency>
+ <!-- Commons IO -->
+ <dependency>
+ <groupId>commons-io</groupId>
+ <artifactId>commons-io</artifactId>
+ <version>2.18.0</version>
+ </dependency>
+ </dependencies>
+</project>
+Log4j2.xml
+C:\Users\student\IdeaProjects\practical14\src\main\log4j2.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+ <Appenders>
+ <Console name="Console">
+ <PatternLayout pattern="%d [%p] %m%n"/>
+ </Console>
+ <File name="FileLogger"
+ fileName="logs/execution.log">
+ <PatternLayout
+ pattern="%d %-5p %c - %m%n"/>
+ </File>
+ </Appenders>
+ <Loggers>
+ <Root level="info">
+ <AppenderRef ref="Console"/>
+ <AppenderRef ref="FileLogger"/>
+ </Root>
+ </Loggers>
+</Configuration>
+Practical 15
+Page Object Model (POM) Framework Implementation
+Tool: Selenium WebDriver + TestNG
+Design and implement automation framework using Page Object Model (POM).
+Create reusable page classes and execute modular test cases.
+Project Structure
+POMFramework
+src
+├── main
+│ └── java
+│ ├── pages
+│ │ LoginPage.java
+│ │
+│ └── base
+│ BaseClass.java
+│
+└── test
+ └── java
+ tests
+ LoginTest.java
+Step1- Create 3 packages - pages, base and test in main folder
+Like this– C:\Users\student\IdeaProjects\Practical15\src\main\java\base
+Step2- Create java classes in all the packages as shown in project structure under
+the respective package.
+BaseClass.java
+package base;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+public class BaseClass {
+ public static WebDriver driver;
+ public void setup() {
+ driver = new ChromeDriver();
+ driver.manage().window().maximize();
+ driver.get("https://practicetestautomation.com/practice-test-login/");
+ }
+ public void closeBrowser() {
+ driver.quit();
+ }
+}
+LoginPage.java
+package pages;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+public class LoginPage {
+ WebDriver driver;
+ By username = By.id("username");
+ By password = By.id("password");
+ By loginButton = By.id("submit");
+ public LoginPage(WebDriver driver) {
+ this.driver = driver;
+ }
+ public void enterUsername(String user) {
+ driver.findElement(username).sendKeys(user);
+ }
+ public void enterPassword(String pass) {
+ driver.findElement(password).sendKeys(pass);
+ }
+ public void clickLogin() {
+ driver.findElement(loginButton).click();
+ }
+}
+LoginTest.java
+package tests;
+import base.BaseClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import pages.LoginPage;
+public class LoginTest extends BaseClass {
+ LoginPage login;
+ @BeforeMethod
+ public void openBrowser() {
+ setup();
+ login = new LoginPage(driver);
+ }
+ @Test
+ public void LoginTestCase() {
+ login.enterUsername("student");
+ login.enterPassword("Password123");
+ login.clickLogin();
+ System.out.println("Login Successful");
+ }
+ @AfterMethod
+ public void close() {
+ closeBrowser();
+ }
+}
+Step 3: Create TestNG XML
+Right Click Project
+New
+ → File
+Now Create– testng.xml
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="POM Suite">
+ <test name="Login Test">
+ <classes>
+ <class name="tests.LoginTest"/>
+ </classes>
+ </test>
+</suite>
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>POMFramework</artifactId>
+ <version>1.0</version>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- TestNG -->
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>test</scope>
+ </dependency>
+ </dependencies>
+</project>
+Practical 16
+TestNG Framework Implementation and Reporting Tool: Selenium WebDriver +
+TestNG Create and execute automated test cases using TestNG annotations. Group
+test cases, define priorities, and generate HTML test reports.
+TestNGDemo.java
+package org.example;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
+public class TestNGDemo {
+ WebDriver driver;
+ @BeforeClass
+ public void setup() {
+ driver = new ChromeDriver();
+ driver.manage().window().maximize();
+ }
+ @Test(priority = 1, groups = "Smoke")
+ public void googleTitle() {
+ driver.get("https://www.google.com");
+ Assert.assertTrue(driver.getTitle().contains("Google"));
+ }
+ @Test(priority = 2, groups = "Regression")
+ public void googleURL() {
+ driver.get("https://www.google.com");
+ Assert.assertTrue(driver.getCurrentUrl().contains("google"));
+ }
+ @AfterClass
+ public void closeBrowser() {
+ //driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.demo</groupId>
+ <artifactId>TestNGFramework</artifactId>
+ <version>1.0</version>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- TestNG -->
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>test</scope>
+ </dependency>
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>compile</scope>
+ </dependency>
+ </dependencies>
+</project>
+Create New file under the Project name as shown in the following path
+C:\Users\Student\IdeaProjects\Practical16\testng.xml
+testng.xml
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AutomationSuite">
+ <test name="SmokeTests">
+ <groups>
+ <run>
+ <include name="Smoke"/>
+ </run>
+ </groups>
+ <classes>
+ <class name="org.example.TestNGDemo"/>
+ </classes>
+ </test>
+</suite>
+Practical 17
+Continuous Integration using Jenkins Tool: Jenkins + Selenium WebDriver
+Configure Jenkins to execute Selenium automation scripts automatically. Generate
+build reports and analyze test execution history.
+LoginTest.java
+package org.example;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+public class LoginTest {
+ @Test
+ public void openGoogle() {
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://www.google.com");
+ System.out.println("Google Opened Successfully");
+ driver.quit();
+ }
+}
+Pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>SeleniumJenkinsProject</artifactId>
+ <version>1.0</version>
+ <dependencies>
+ <!-- Selenium -->
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.35.0</version>
+ </dependency>
+ <!-- TestNG -->
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>test</scope>
+ </dependency>
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>compile</scope>
+ </dependency>
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>compile</scope>
+ </dependency>
+ </dependencies>
+ <build>
+ <plugins>
+ <plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-surefire-plugin</artifactId>
+ <version>3.5.3</version>
+ <configuration>
+ <suiteXmlFiles>
+ <suiteXmlFile>testng.xml</suiteXmlFile>
+ </suiteXmlFiles>
+ </configuration>
+ </plugin>
+ </plugins>
+ </build>
+</project>
+Create below file Same as practical 16
+Testng.xml
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AutomationSuite">
+ <test name="Google Test">
+ <classes>
+ <class name="org.example.LoginTest"/>
+ </classes>
+ </test>
+</suite>
+Practical 18
+Cross-Browser Testing Using Selenium Grid 3
+Tool: Selenium Grid
+Execute automation scripts across multiple browsers (Chrome, Firefox, Edge) using
+Selenium Grid. Compare execution time and compatibility issues.
+“Note: Below Steps are as same as in Practical 4”
+Step 1 Create files and folders as given in the following structure
+Step2-Create a folder: C:\Selenium
+Step3-Download jar file from https://www.selenium.dev/downloads/ →previous
+release →release→ selenium 4.45.0 jar
+Step4-Move jar in selenium folder
+Step5-On command prompt run following commands
+1. cd C:\Selenium/
+2. Use this command to run selenium
+java -jar selenium-server-4.45.0.jar standalone
+Step6-Go to http://localhost:4444
+browser and listen on port
+ Get output like this
+Keep this on→
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.example</groupId>
+ <artifactId>CrossBrowserGrid</artifactId>
+ <version>1.0</version>
+ <properties>
+ <maven.compiler.source>17</maven.compiler.source>
+ <maven.compiler.target>17</maven.compiler.target>
+ </properties>
+ <dependencies>
+ <dependency>
+ <groupId>org.seleniumhq.selenium</groupId>
+ <artifactId>selenium-java</artifactId>
+ <version>4.34.0</version>
+ </dependency>
+ <dependency>
+ <groupId>org.testng</groupId>
+ <artifactId>testng</artifactId>
+ <version>7.11.0</version>
+ <scope>test</scope>
+ </dependency>
+ </dependencies>
+</project>
+BaseTest.java
+C:\Users\student\IdeaProjects\Practical18\src\test\java\tests\BaseTest.java
+package tests;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.*;
+import java.net.URL;
+public class BaseTest {
+ WebDriver driver;
+ @Parameters("browser")
+ @BeforeMethod
+ public void setup(String browser) throws Exception {
+ if(browser.equalsIgnoreCase("chrome")) {
+ driver = new RemoteWebDriver(
+ new URL("http://localhost:4444"),
+ new ChromeOptions());
+ }
+ else if(browser.equalsIgnoreCase("firefox")) {
+ driver = new RemoteWebDriver(
+ new URL("http://localhost:4444"),
+ new FirefoxOptions());
+ }
+ else if(browser.equalsIgnoreCase("edge")) {
+ driver = new RemoteWebDriver(
+ new URL("http://localhost:4444"),
+ new EdgeOptions());
+ }
+ driver.manage().window().maximize();
+ }
+ @AfterMethod
+ public void tearDown() {
+ // driver.quit();
+ }
+}
+LoginTest.java
+C:\Users\student\IdeaProjects\Practical18\src\test\java\tests\LoginTest.java
+package tests;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+public class LoginTest extends BaseTest {
+ @Test
+ public void verifyTitle() {
+ long start = System.currentTimeMillis();
+ driver.get("https://the-internet.herokuapp.com/login");
+ String title = driver.getTitle();
+ Assert.assertEquals(title, "The Internet");
+ long end = System.currentTimeMillis();
+ System.out.println("--------------------------------");
+ System.out.println("Browser Execution Time : "
+ + (end-start)+" ms");
+ System.out.println("--------------------------------");
+ }
+}
+Testng.xml
+C:\Users\student\IdeaProjects\Practical18\testng.xml
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="3">
+ <test name="Chrome Test">
+ <parameter name="browser" value="chrome"/>
+ <classes>
+ <class name="tests.LoginTest"/>
+ </classes>
+ </test>
+ <test name="Firefox Test">
+ <parameter name="browser" value="firefox"/>
+ <classes>
+ <class name="tests.LoginTest"/>
+ </classes>
+ </test>
+ <test name="Edge Test">
+ <parameter name="browser" value="edge"/>
+ <classes>
+ <class name="tests.LoginTest"/>
+ </classes>
+ </test>
+</suite>
+Practical 19
+Software Requirements
+Software /
+Requirement
+Recommended Requirement Purpose
+Operating System Windows 10/11 Laboratory environment
+Java
+JDK 11 or later, as supported by the
+selected JMeter release
+Required to run JMeter
+Apache JMeter Latest stable release
+Load and performance
+testing
+Web Browser Chrome / Edge / Firefox Verify the test website
+Internet Required for remote test site
+Access the demo
+application
+RAM 4 GB or more
+Recommended for
+classroom exercises
+Processor Dual-core or better Run JMeter and browser
+Official JMeter download: https://jmeter.apache.org/download_jmeter.cgi
+Go to Binary– download zip file
+Extract the zip folder to the folder created by you.
+Go to bin ->double click on ApacheJMeter executable jar file.
+Introduction to Apache JMeter
+Apache JMeter is an open-source Java-based application used for load testing and
+performance testing. It can test web applications, HTTP/HTTPS services, REST APIs,
+SOAP services, JDBC databases, FTP, LDAP, JMS, and other supported protocols.
+JMeter primarily works at the protocol level; it is not a normal browser and does not
+execute client-side JavaScript like a browser.
+Important JMeter Terminology
+1 Test Plan
+A Test Plan is the top-level container of a JMeter test. It can contain Thread Groups,
+Samplers, Listeners, Timers, Assertions, and other elements.
+2 Thread
+A Thread represents a virtual user. For example, Number of Threads = 20 means JMeter
+simulates 20 virtual users.
+3 Thread Group
+A Thread Group controls the number of users, Ramp-Up Period, Loop Count, and the
+action to take after a sampler error.
+4 Ramp-Up Time
+Ramp-Up Time determines how quickly JMeter starts all configured users. Example: 20
+users with a 10-second ramp-up means the users are started over a 10-second period.
+5 Loop Count
+Loop Count determines how many times each virtual user repeats the configured test
+sequence. Example: 20 users × 5 loops = 100 executions when one request is inside the
+loop.
+Test Scenario
+Parameter Value
+Number of Users 20
+Ramp-Up Time 10 seconds
+Loop Count 5
+Protocol HTTPS
+Server blazedemo.com
+Method GET
+Path /
+Expected executions for one HTTP Request: 20 × 5 = 100 requests
+Install Apache JMeter
+1. Download the Binary ZIP package from the official Apache JMeter website.
+2. Extract the ZIP file, for example to C:\Apache\.
+3. The extracted folder will look similar to C:\Apache\apache-jmeter-5.x.x.
+4. JMeter does not require a traditional Windows installer.
+1.Create a New Test Plan
+5. Select File → New.
+6. A blank Test Plan appears.
+7. Rename it to Load Testing Practical.
+2.Save the Test Plan
+8. Select File → Save As.
+9. Create a practical folder, for example C:\JMeter_Practical\.
+10. Save the file as LoadTesting.jmx.
+11. The .jmx file stores the complete JMeter Test Plan.
+3.Create a Thread Group
+12. Right-click Test Plan.
+13. Select Add → Threads (Users) → Thread Group.
+14. Rename it to Load Test - 20 Users.
+4. Configure the Thread Group
+Setting Value
+Number of Threads (Users) 20
+Ramp-Up Period 10 seconds
+Loop Count 5
+Action after Sampler Error Continue
+Do not select the Forever option for this experiment because the practical requires a
+fixed loop count.
+5.Add HTTP Request
+15. Right-click Thread Group.
+16. Select Add → Sampler → HTTP Request.
+17. Rename it to Open Home Page.
+6. Configure HTTP Request
+Field Value
+Protocol https
+Server Name or IP blazedemo.com
+Method GET
+Path /
+7.Add View Results Tree
+18. Right-click Thread Group.
+19. Select Add → Listener → View Results Tree.
+20. Use it to inspect individual requests, response codes, and response data.
+Note: View Results Tree is useful for debugging small tests but can consume
+considerable memory during larger load tests.
+8. Add Summary Report
+21. Right-click Thread Group.
+22. Select Add → Listener → Summary Report.
+The Summary Report displays samples, average response time, minimum, maximum,
+error percentage, throughput, and related statistics.
+9. Add Aggregate Report
+23. Right-click Thread Group.
+24. Select Add → Listener → Aggregate Report.
+The Aggregate Report provides detailed statistics including Average, Median,
+percentiles, Minimum, Maximum, Standard Deviation, Error %, and Throughput.
+10. Add Graph Results
+25. Right-click Thread Group.
+26. Select Add → Listener → Graph Results.
+Graph Results helps visualize response-time-related performance behavior.
+Final Test Plan Structure
+Your Test Plan should look approximately like this:
+Load Testing Practical
+ └── Load Test - 20 Users
+ ├── Open Home Page
+ ├── View Results Tree
+ ├── Summary Report
+ ├── Aggregate Report
+ └── Graph Results
+Execute the Load Test
+Restore Threads = 20, Ramp-Up = 10 seconds, and Loop Count = 5.
+Save the Test Plan.
+Click the Start (green play) button.
+JMeter creates the configured virtual users.
+The users execute the HTTP Request according to the configured loop count.
+Wait until the test completes.
+Warning: The File Already Exists
+When a test is run more than once, JMeter may display: “The file already exists. What do
+you want to do?” with options such as Append to existing file, Don't start, and Overwrite
+existing file.
+This normally means a Listener or result configuration is trying to save results to a file
+that already exists.
+Recommended option for a fresh experiment: Select Overwrite existing file.
+Option Meaning Use for this practical?
+Append to existing
+file
+Adds new results to the old result
+file.
+Usually no
+Don't start Cancels the test.
+Only if you want to change
+the file
+Overwrite existing
+file
+Replaces the old result file with
+fresh results.
+Yes
+1. Analyze View Results Tree
+• Open View Results Tree.
+• Select an individual request.
+• Check Request information.
+• Check Response Code.
+• Check Response Message.
+• Check Response Data.
+• Use this listener mainly for debugging and small tests.
+2.Analyze Summary Report
+A Summary Report may contain results similar to the following. Actual values will vary
+with the computer, network, server, and test conditions.
+Label # Samples Average Min Max Error % Throughput
+Open Home Page 100 250 ms 100 ms 700 ms 0.00% 18.2/sec
+3.Analyze Performance Metrics
+Samples
+The number of requests recorded by JMeter.
+Average Response Time
+The average time taken to receive responses. Lower response time generally indicates
+faster response, subject to application requirements.
+Minimum Response Time
+The fastest recorded response.
+Maximum Response Time
+The slowest recorded response. A large difference between average and maximum may
+indicate occasional slow responses.
+Throughput
+Throughput indicates the rate at which requests are processed, commonly displayed by
+JMeter as requests per second. It should be considered together with response time
+and error percentage.
+Error Percentage
+Error percentage indicates the percentage of requests that failed.
+Formula: Error % = (Failed Requests / Total Requests) × 100
+Example: If 5 out of 100 requests fail, Error % = (5 / 100) × 100 = 5%.
+4.Analyze Aggregate Report
+Column Meaning
+Label Name of the request
+# Samples Number of requests
+Average Average response time
+Min Minimum response time
+Max Maximum response time
+Std. Dev. Variation in response times
+Error % Percentage of failed requests
+Throughput Requests processed per unit time
+Received KB/sec Data received per second
+Sent KB/sec Data sent per second
+5.Analyze Graph Results
+• Open Graph Results.
+• Observe response-time behavior.
+• Look for increasing response time as load increases.
+• Look for large variation in response time.
+• Observe changes in throughput.
+• Check whether errors appear under load.
+Perform Three Load Scenarios
+Scenario Threads Ramp-Up Loop Count Expected Executions
+Low Load 10 5 sec 5 50
+Medium Load 20 10 sec 5 100
+Higher Load 50 20 sec 5 250
+These are modest classroom values. The appropriate load depends on the application,
+environment, and authorization.
+Record the Results
+Test Users
+RampUp
+Loops Samples
+Avg. Response
+Time
+Throughput
+Error
+%
+Test
+1
+10 5 sec 5 ___ ___ ms ___/sec ___%
+Test
+2
+20 10 sec 5 ___ ___ ms ___/sec ___%
+Test
+3
+50 20 sec 5 ___ ___ ms ___/sec ___%
+Installation process for practical 20
+Bugzilla + XAMPP Installation on Windows 11
+Overall setup
+You will have:
+Windows 11
+ │
+ └── XAMPP
+ ├── Apache
+ ├── MariaDB
+ ├── Perl
+ └── phpMyAdmin
+ │
+ └── Bugzilla 5.2
+You will access Bugzilla through:
+http://localhost/bugzilla
+PART 1 — Download XAMPP
+Go to the official Apache Friends download page:
+Download XAMPP for Windows
+Which XAMPP should you choose?
+The official page currently lists Windows 64-bit packages including:
+• XAMPP 8.0.30
+• XAMPP 8.1.25
+• XAMPP 8.2.12
+The listed package includes:
+• Apache 2.4.58
+• MariaDB 10.4.32
+• PHP
+• phpMyAdmin
+• Strawberry Perl 5.32.1.1 Portable (Apache Friends)
+For this Bugzilla setup
+I recommend using the 64-bit Windows XAMPP 8.2.12 package from the official page
+rather than downloading Apache/MariaDB/Perl separately.
+Click:
+Download (64 bit) under XAMPP for Windows 8.2.12.
+PART 2 — Install XAMPP
+Run the downloaded installer as Administrator.
+You will see the component selection screen.
+Select these components
+You don't need everything.
+Keep:
+☑ Apache
+☑ MySQL
+☑ PHP
+☑ phpMyAdmin
+In XAMPP, the database service shown as MySQL in the Control Panel is actually
+MariaDB in current XAMPP packages. Apache Friends confirms that XAMPP ships
+MariaDB rather than MySQL. (Apache Friends)
+You can leave the other components unchecked if you don't need them.
+Installation directory
+Use:
+C:\xampp
+So your main folder becomes:
+C:\xampp
+Click:
+Next → Install
+PART 3 — Start XAMPP
+Open:
+C:\xampp\xampp-control.exe
+You will see the XAMPP Control Panel.
+Start:
+Apache
+MariaDB/MySQL
+Depending on your XAMPP version, the database service may be labelled MySQL even
+though the package contains MariaDB.
+You should see both services running.
+PART 4 — Test Apache
+Open Chrome.
+Enter:
+http://localhost
+You should get the XAMPP welcome/dashboard page.
+If this works:
+Apache is working correctly.
+PART 5 — Test phpMyAdmin
+Open:
+http://localhost/phpmyadmin
+You should see the phpMyAdmin interface.
+This will later allow us to verify the Bugzilla database.
+PART 6 — Download Bugzilla
+Now download Bugzilla.
+Official page:
+Bugzilla Download
+The Bugzilla project currently identifies 5.2 as the stable release series. (Bugzilla)
+Under:
+Manual Downloads → Stable Release (5.2)
+download the Bugzilla 5.2 archive.
+It will have a name similar to:
+bugzilla-5.2.x.tar.gz
+The exact point-release filename may differ.
+PART 7 — Extract Bugzilla
+Windows may not extract .tar.gz conveniently.
+You can use:
+• 7-Zip
+• WinRAR
+After extraction you should have a folder similar to:
+bugzilla-5.2.x
+Rename it:
+bugzilla
+Then copy it into:
+C:\xampp\htdocs\
+Final location:
+C:\xampp\htdocs\bugzilla
+You should see:
+C:\xampp\htdocs\bugzilla
+│
+├── Bugzilla
+├── contrib
+├── extensions
+├── template
+├── checksetup.pl
+├── bugzilla.pl
+├── index.cgi
+└── ...
+Do not put Bugzilla inside cgi-bin. Bugzilla's documentation specifically says the
+standard distribution is not designed to be installed in a CGI-bin directory. (Bugzilla)
+PART 8 — Check Perl
+This is an important step.
+XAMPP already contains Strawberry Perl, so do not install another Perl yet.
+Look inside:
+C:\xampp\perl
+You should find Perl-related files.
+However, Windows Command Prompt may not automatically know where XAMPP's Perl
+executable is.
+Open Command Prompt as Administrator and type:
+C:\xampp\perl\bin\perl.exe -v
+You should get a Perl version.
+For example:
+This is perl 5, version 32, subversion 1
+The exact version can vary.
+Bugzilla 5.2 requires Perl 5.14 or newer, so XAMPP's included Perl 5.32.1.1 satisfies that
+minimum. (Bugzilla)
+PART 9 — Run Bugzilla's Module Check
+Now we check whether all required Perl modules are available.
+Open:
+Command Prompt
+Run:
+cd C:\xampp\htdocs\bugzilla
+Then:
+C:\xampp\perl\bin\perl.exe checksetup.pl --check-modules
+This is an important command.
+Bugzilla's checksetup.pl checks the Perl dependencies and performs much of the
+installation/configuration work. (Bugzilla)
+PART 10 — Understand the Output
+You may see something like:
+Checking for CGI.pm ...
+Checking for DBI ...
+Checking for DateTime ...
+Checking for Template ...
+Checking for Email::Sender ...
+Checking for DBD::MariaDB ...
+Some may show:
+OK
+Others may show:
+MISSING
+Don't worry if modules are missing.
+This is normal during the first setup.
+Do not manually download random .pm files from the Internet.
+Bugzilla's installation process is designed around checksetup.pl checking the required
+Perl modules. (Bugzilla)
+PART 11 — Important Database Point
+This is where XAMPP makes things easier.
+Your database server is already provided by XAMPP.
+Start:
+MariaDB/MySQL
+from the XAMPP Control Panel.
+Then open:
+http://localhost/phpmyadmin
+PART 12 — Create Bugzilla Database User
+For a classroom/local installation, you can create a dedicated database user.
+In phpMyAdmin, open:
+User accounts
+Choose:
+Create user account
+For example:
+Username: bugzilla
+Host: localhost
+Password: Bugzilla@123
+Use your own password rather than the example password above.
+Give this user permissions for the Bugzilla database.
+PART 13 — Run checksetup.pl
+Go back to Command Prompt:
+cd C:\xampp\htdocs\bugzilla
+Run:
+C:\xampp\perl\bin\perl.exe checksetup.pl
+Bugzilla will create:
+localconfig
+This file contains the database and installation configuration. Bugzilla's installation
+documentation describes checksetup.pl as the script that creates/updates localconfig
+and then creates/configures the database. (Bugzilla)
+PART 14 — Edit localconfig
+Open:
+C:\xampp\htdocs\bugzilla\localconfig
+Use Notepad++ or VS Code.
+You will find database configuration variables.
+For example, configure the database approximately as:
+$db_driver = 'mariadb';
+$db_host = 'localhost';
+$db_name = 'bugs';
+$db_user = 'bugzilla';
+$db_pass = 'YOUR_PASSWORD';
+The exact generated variable structure should be preserved.
+Do not delete other settings from localconfig.
+Bugzilla 5.2 explicitly supports MariaDB and uses a MariaDB-specific database driver.
+(Bugzilla)
+PART 15 — Create the Bugzilla Database
+Run again:
+C:\xampp\perl\bin\perl.exe checksetup.pl
+Bugzilla should now connect to MariaDB and create its database/tables.
+You should see many messages related to:
+Creating database
+Creating tables
+Creating indexes
+Creating default data
+The checksetup.pl script is specifically designed to check database requirements and
+create/update Bugzilla's database and tables. (Bugzilla)
+PART 16 — Configure Apache for CGI
+This is the most important XAMPP configuration step.
+Bugzilla is a Perl/CGI application, so Apache needs to execute its CGI scripts rather
+than simply display them.
+Open:
+C:\xampp\apache\conf\httpd.conf
+Make a backup first:
+httpd.conf.backup
+Add Bugzilla Directory Configuration
+At the bottom of httpd.conf, add:
+<Directory "C:/xampp/htdocs/bugzilla">
+ Options +ExecCGI
+ AddHandler cgi-script .cgi
+ DirectoryIndex index.cgi
+ AllowOverride All
+ Require all granted
+</Directory>
+Bugzilla's Apache documentation uses the same core settings: enable CGI execution,
+set index.cgi as the directory index, and allow .htaccess overrides. (Bugzilla)
+PART 17 — Windows Perl CGI Configuration
+For Windows, Bugzilla documentation notes that Apache may also need:
+ScriptInterpreterSource Registry-Strict
+This allows Apache on Windows to determine the interpreter for CGI scripts from the
+Windows registry. (Bugzilla)
+However, because XAMPP's bundled Perl is a portable installation, this is one area
+where we should verify the actual CGI behavior rather than blindly adding settings.
+So initially add the <Directory> block above and test Apache.
+PART 18 — Check Apache Configuration
+Open XAMPP Control Panel.
+Stop Apache.
+Then open Command Prompt as Administrator.
+Run:
+C:\xampp\apache\bin\httpd.exe -t
+You want:
+Syntax OK
+If you get an error, don't start Bugzilla yet.
+Fix the Apache error first.
+PART 19 — Restart Apache
+In XAMPP:
+Apache → Start
+If Apache starts successfully, open:
+http://localhost/bugzilla
+PART 20 — Possible Result
+If everything is correctly configured, you should get the Bugzilla login/home page.
+You have now successfully connected:
+Browser
+ ↓
+Apache
+ ↓
+Bugzilla CGI
+ ↓
+Perl
+ ↓
+MariaDB
+PART 21 — Create the Bugzilla Administrator
+During the final checksetup.pl process, Bugzilla may ask you for administrator
+information.
+Enter:
+Administrator Email:
+your-email@example.com
+Real Name:
+Your Name
+Password:
+Your Bugzilla Password
+Bugzilla needs an administrator account to manage products, components, users and
+configuration. Its installation process prompts for administrator information after the
+database setup. (Bugzilla)
+PART 22 — Login
+Open:
+http://localhost/bugzilla
+Click:
+Log In
+Enter the administrator email and password you created.
+PART 23 — Create Your Practical Product
+Once logged in as administrator:
+Go to:
+Administration
+ ↓
+Products
+ ↓
+Add a Product
+Create:
+Product:
+Online Shopping System
+Then create components such as:
+Login
+Registration
+Product Catalog
+Shopping Cart
+Payment
+This will give you a realistic environment for your practical.
+PART 24 — Create a Sample Bug
+Go to:
+File a Bug
+Enter:
+Field Example
+Product Online Shopping System
+Component Login
+Summary Valid user cannot log in with correct credentials
+Severity Major
+Priority P1
+Version 1.0
+Description:
+A registered user enters a valid username and password,
+but the system displays "Invalid username or password".
+Steps:
+1. Open Online Shopping System.
+2. Open Login page.
+3. Enter valid username.
+4. Enter valid password.
+5. Click Login.
+Expected:
+User should successfully log in.
+Actual:
+System displays invalid username/password message.
+Click:
+Submit Bug
+PART 25 — Demonstrate the Defect Lifecycle
+Now use your Bugzilla installation to demonstrate:
+NEW
+↓
+ASSIGNED
+↓
+IN PROGRESS
+↓
+RESOLVED
+↓
+VERIFIED
+↓
+CLOSED
+If the tester finds that the problem still exists:
+RESOLVED
+ ↓
+REOPENED
+ ↓
+IN PROGRESS
+This directly supports your practical requirement.
+PART 26 — Generate Reports
+Use Bugzilla's search/report functionality to demonstrate:
+• Bugs by status
+• Bugs by severity
+• Bugs by priority
+• Bugs by component
+• Bugs by assignee
+• Open vs closed defects
+Bugzilla's 5.2 documentation lists optional Perl modules such as GD and chart-related
+modules for graphical reports, so graphical reporting may require additional modules
+beyond the basic installation. (Bugzilla)
+Very Important: XAMPP Already Gives You Perl
+Earlier we discussed installing Strawberry Perl separately.
+With the XAMPP package currently listed by Apache Friends, you should first use
+the Perl included with XAMPP.
+The official XAMPP page says the Windows package includes:
+Strawberry Perl 5.32.1.1 Portable
+along with Apache and MariaDB. (Apache Friends)
+Therefore, your installation can be:
+ XAMPP
+ ┌───────────────┐
+ │ Apache │
+ │ MariaDB │
+ │ Perl │
+ │ phpMyAdmin │
+ └───────┬───────┘
+ │
+ Bugzilla 5.2
+ │
+ ↓
+ http://localhost/bugzilla
+You don't need a separate Apache installation, separate MariaDB installation, or
+separate Perl installation initially.
+One warning about this setup
+Bugzilla itself recommends Apache, and XAMPP supplies Apache, so using XAMPP is
+technically reasonable for a local teaching/lab environment. But XAMPP is primarily a
+development stack, not something I would expose to the Internet for a production
+Bugzilla installation.
+For your college practical, keep it localhost-only.
+My recommended installation strategy
+Because there are several moving parts, don't perform all 26 steps at once.
+Let's do it in these checkpoints:
+Checkpoint 1: Install XAMPP → test Apache + MariaDB + Perl
+Checkpoint 2: Download/extract Bugzilla
+Checkpoint 3: Run checksetup.pl --check-modules
+Checkpoint 4: Fix missing Perl modules
+Checkpoint 5: Configure MariaDB
+Checkpoint 6: Run checksetup.pl
+Checkpoint 7: Configure Apache CGI
+Checkpoint 8: Open Bugzilla
+Checkpoint 9: Create Product/Component
+Checkpoint 10: Create and track sample bugs
+This approach is much safer because if something fails, we can identify exactly
+which component caused it rather than trying to troubleshoot the whole installation.
+Official downloads you'll need
+• XAMPP for Windows
+• Bugzilla 5.2 Download
+• Bugzilla 5.2 Requirements
+• Bugzilla Documentation
