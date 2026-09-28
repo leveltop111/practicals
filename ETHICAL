@@ -1,0 +1,46 @@
+1.CMD
+
+
+1.ipconfig
+2.ping
+3.tracert
+4.netstat
+
+2.NMAP
+//ACK -sA (TCP ACK scan)
+cmd= nmap -sA -T4 scanme.nmap.org
+//SYN
+nmap -p22,113,139 scanme.nmap.org
+//FIN SCAN
+nmap -sF -T4 para
+//NULLSCAN
+nmap –sN –p 22 scanme.nmap.org
+//SMAS
+nmap -sX -T4 scanme.nmap.org
+
+3.KEYlogger
+
+import tkinter as tk
+def key_pressed(event):
+ key = event.keysym
+ label.config(text=f"Key pressed: {key}")
+ with open("keys_log.txt", "a") as f:
+ f.write(key + "\n")
+# Create window
+root = tk.Tk()
+root.title("Keyboard Input Logger (Educational)")
+root.geometry("400x200")
+label = tk.Label(root, text="Press any key...", font=("Arial", 14))
+label.pack(pady=40)
+# Bind key press event
+root.bind("<KeyPress>", key_pressed)
+root.mainloop()
+Steps to save and run
+ Open Notepad / VS Code
+ Paste the code
+ Save as:
+key_logger_demo.py
+ Open Command Prompt / Terminal
+ Navigate to the file location
+ Run:
+python key_logger_demo.py
